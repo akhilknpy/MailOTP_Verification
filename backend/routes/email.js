@@ -3,16 +3,15 @@ const router = express.Router()
 const nodemailer = require('nodemailer')
 const User = require('../models/emailSchema')
 const crypto = require('crypto')
-const { log } = require('console')
-const { env } = require('process')
 require('dotenv').config()
 
 //Configure nodemailer
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: process.env.EMAIL_PORT,
-  secure: true, // Use true for Yahoo (port 465 uses SSL/TLS)
+   host: process.env.EMAIL_HOST,
+   port: process.env.EMAIL_PORT,
+   secure: true, //Use true for Yahoo (port 465 uses SSL/TLS)
+   
   auth: {
     user: process.env.EMAIL,
     pass: process.env.PASSWORD,
@@ -27,14 +26,14 @@ transporter.verify(function(error, success) {
   }
 })
 
-//Send Mcrypto.ail
+//Send Mcrypto.mail
 router.post('/send-otp', async (req, res) => {
     const { email } = req.body;
 
     // Generate OTP and expiration time
     const otp = crypto.randomInt(100000, 999999).toString();
     const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
-    console.log(otpExpiresAt)
+    // console.log(otpExpiresAt)
 
     let user = await User.findOne({ email });
     if (!user) {

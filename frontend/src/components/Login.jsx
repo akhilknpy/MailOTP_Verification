@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
+
 
 function Login() {
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
   const [step, setStep] = useState(1); // 1: Request OTP, 2: Verify OTP
   const [message, setMessage] = useState('');
+  const navigate=useNavigate()
 
   const requestOtp = async () => {
     try {
@@ -21,6 +24,7 @@ function Login() {
     try {
       const response = await axios.post('http://localhost:3000/api/verify-otp', { email, otp });
       setMessage(response.data.message);
+      setStep(3);
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error verifying OTP');
     }
@@ -50,8 +54,19 @@ function Login() {
           />
           <button onClick={verifyOtp}>Verify OTP</button>
         </div>
+        
       )}
+       {step === 3 && (
+        <div>
+          if ({message}=='Login successful') {
+            navigate('/WelcomePage')
+       }
+        </div>
+        
+      )}
+       
       {message && <p>{message}</p>}
+    
     </div>
   );
 }
